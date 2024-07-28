@@ -35,8 +35,8 @@ export default function MiniPlayer() {
     <>
         <View className="flex-row justify-between items-center h-full mx-2 pl-2 pr-4 rounded-lg bg-[#444444]">
             <View className="flex flex-row items-center gap-2">
-              <Image source={{ uri: playerContext.currentTrack.artwork}} className="h-[40px] w-[40px] rounded"/>
-              <Text className=" text-white font-bold">{playerContext.currentTrack.title}</Text>
+              <Image source={{ uri: playerContext.currentTrack?.artwork}} className="h-[40px] w-[40px] rounded"/>
+              <Text numberOfLines={1} className=" text-white font-bold max-w-[60%] bg-pink-600">{playerContext.currentTrack?.title}</Text>
             </View>
             <View className="flex flex-row items-center gap-5">
 

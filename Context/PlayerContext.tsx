@@ -41,26 +41,25 @@ export const PlayerContextProvider: React.FC = (props: PropsWithChildren<{}>) =>
     const play = async (track?: Track) => {
         if(!track) {
             console.log("Don't have track")
-            if(currentTrack) {
-                await RNTrackPlayer.play()
-            }
             return
         }
         console.log("Play Track")
         const queue = await RNTrackPlayer.getQueue();
-        const existingTrack = queue.find(q => q.id === track.id)
-        queue.forEach(item => {
-            console.log("track current in queue", item)
-        })
-        if(existingTrack) {
+        //const existingTrack = queue.find(q => q.id === track.id)
+        //queue.forEach(item => {
+            //console.log("track current in queue", item)
+        //})
+        //if(existingTrack) {
+        //    console.log("Fonnd this track in queue replay it from begin")
             //await RNTrackPlayer.skip(track.id)
-            await RNTrackPlayer.seekTo(0)
-            await RNTrackPlayer.play()
-        } else {
+        //    await RNTrackPlayer.seekTo(0)
+        //    await RNTrackPlayer.play()
+        //} else {
+            console.log("Play track", track)
             await RNTrackPlayer.add([track])
             setCurrentTrack(track)
             await RNTrackPlayer.play()
-        }
+        //}
     }
 
     const pause = async () => {

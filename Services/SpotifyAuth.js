@@ -1,8 +1,8 @@
 import axios from "react-native-axios"
 
 const SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
-const CLIENT_ID = 'bbf61e9a5db2412180a926c9b029de4b'
-const CLIENT_SECRET = '9f6051ceae004a27911d30aa167c35a3'
+const CLINET_DI = 'bbf61e9a5db2412180a926c9b029de4b'
+const CLINET_SCREET = '9f6051ceae004a27911d30aa167c35a3'
 
 export const GetSpotifyToken = async () => {
     try {
@@ -11,8 +11,8 @@ export const GetSpotifyToken = async () => {
             SPOTIFY_TOKEN_URL,
             new URLSearchParams({
                 grant_type: 'client_credentials',
-                client_id: CLIENT_ID,
-                client_secret: CLIENT_SECRET
+                client_id: CLINET_DI,
+                client_secret: CLINET_SCREET
             }),
             {
                 headers: {

@@ -1,0 +1,24 @@
+{
+	"folders": [
+		{
+			"name": "MusicApp",
+			"path": ".."
+		},
+		{
+			"name": "screens",
+			"path": "../../../../../Volumes/Untitled/react/screens"
+		},
+		{
+			"name": "navigation",
+			"path": "../../../../../Volumes/Untitled/react/navigation"
+		},
+		{
+			"name": "components",
+			"path": "../../../../../Volumes/Untitled/react/components"
+		},
+		{
+			"path": "../../../../../Volumes/Untitled/react/Context"
+		}
+	],
+	"settings": {}
+}

@@ -63,9 +63,6 @@ function App() {
           {isReady ? (
             <NavigationContainer>
               <SafeAreaView className='flex-1 bg-black'>
-                {/* <Text className="text-red">Test</Text>
-                <Button title='Stop' onPress={() => TrackPlayer.stop()}></Button>
-                <Button title='Play' onPress={() => TrackPlayer.play()}></Button>  */}
                 <Tabs/>
               </SafeAreaView>
             </NavigationContainer>
