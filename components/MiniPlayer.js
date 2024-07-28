@@ -16,41 +16,33 @@ export default function MiniPlayer() {
   }
 
   useEffect(() => {
-    console.log("player context change")
-  }, [playerContext])
+    console.log("player context change", playerContext)
+  }, [playerContext.isPlaying])
 
   const handlePlay = () => {
-    console.log("press play")
-    playerContext.play(
-      {
-        id: 'trackId',
-        url: 'https://m5pswj9mo177.share.zrok.io/musics/get4',
-        title: 'Track Title',
-        artist: 'Track Artist',
-      }
-    )
+    playerContext.play()
   }
 
   return (
     <>
         <View className="flex-row justify-between items-center h-full mx-2 pl-2 pr-4 rounded-lg bg-[#444444]">
-            <View className="flex flex-row items-center gap-2">
+            <View className="flex flex-row items-center gap-2 max-w-[70%]">
               <Image source={{ uri: playerContext.currentTrack?.artwork}} className="h-[40px] w-[40px] rounded"/>
-              <Text numberOfLines={1} className=" text-white font-bold max-w-[60%] bg-pink-600">{playerContext.currentTrack?.title}</Text>
+              <Text numberOfLines={1} ellipsizeMode="tail" className=" text-white font-bold w-[90%]">{playerContext.currentTrack?.title}</Text>
             </View>
             <View className="flex flex-row items-center gap-5">
-
               {playerContext.isPlaying && (
                 <TouchableOpacity className="" onPress={handlePause}>
                   <AntDesign name="pause" size={30} color="white"/>
                 </TouchableOpacity>
               )}
 
-              {(playerContext.isPaused || playerContext.isEmpty) && (
+              {(playerContext && !playerContext.isPlaying) && (
                 <TouchableOpacity onPress={handlePlay}>
-                  <AntDesign name="caretright" size={24} color="white"/>  
+                    <AntDesign name="caretright" size={24} color="white" />
                 </TouchableOpacity>
               )}
+
               <AntDesign name="forward" size={24} color="white"/>
             </View>
         </View>

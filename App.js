@@ -50,6 +50,9 @@ function App() {
     // })
     // await TrackPlayer.play();
     //await TrackPlayer.pause()
+    return () => {
+      TrackPlayer.destroy()
+    }
   }
 
   useEffect(() => {

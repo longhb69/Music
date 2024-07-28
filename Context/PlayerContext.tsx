@@ -1,11 +1,15 @@
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useEffect } from 'react';
 import RNTrackPlayer, {State as TrackPlayerState ,Track, Event} from 'react-native-track-player'
+import { seekTo } from 'react-native-track-player/lib/src/trackPlayer';
 
 interface PlayerContextType {
     isPlaying: boolean;
     isPaused: boolean;
     isStopped: boolean;
     isEmpty: boolean;
+    loading: boolean;
+    buffering: boolean;
+    ended: boolean;
     currentTrack: Track | null;
     play: (track?: Track) => void;
     pause: () => void;
@@ -16,6 +20,9 @@ export const PlayerContext = React.createContext<PlayerContextType>({
     isPaused: false,
     isStopped: false,
     isEmpty: false,
+    loading: false,
+    buffering: false,
+    ended: false,
     currentTrack: null,
     play: () => null,
     pause: () => null,
@@ -40,10 +47,10 @@ export const PlayerContextProvider: React.FC = (props: PropsWithChildren<{}>) =>
 
     const play = async (track?: Track) => {
         if(!track) {
-            console.log("Don't have track")
+            console.log("Don't have track try to play current track")
+            RNTrackPlayer.play()
             return
         }
-        console.log("Play Track")
         const queue = await RNTrackPlayer.getQueue();
         //const existingTrack = queue.find(q => q.id === track.id)
         //queue.forEach(item => {
@@ -55,10 +62,11 @@ export const PlayerContextProvider: React.FC = (props: PropsWithChildren<{}>) =>
         //    await RNTrackPlayer.seekTo(0)
         //    await RNTrackPlayer.play()
         //} else {
-            console.log("Play track", track)
+            RNTrackPlayer.reset()
             await RNTrackPlayer.add([track])
             setCurrentTrack(track)
             await RNTrackPlayer.play()
+            await seekTo(120.2)
         //}
     }
 
@@ -66,13 +74,14 @@ export const PlayerContextProvider: React.FC = (props: PropsWithChildren<{}>) =>
         await RNTrackPlayer.pause()
     }
 
-
-
     const value: PlayerContextType = {
         isPlaying: playerState === TrackPlayerState.Playing,
         isPaused: playerState === TrackPlayerState.Paused,
         isStopped: playerState === TrackPlayerState.Stopped,
         isEmpty: playerState === null,
+        loading: playerState === TrackPlayerState.Loading,
+        buffering: playerState === TrackPlayerState.Buffering,
+        ended: playerState === TrackPlayerState.Ended,
         currentTrack,
         play,
         pause
