@@ -10,6 +10,10 @@ export default function Track({ track, currentSongId }) {
   const aipKye = 'AIzaSyA_e8fP1BotG4eRszVpfUfN4arDM9gWlxI'
   const playerContext = usePlayerContext()
 
+  //should add year the track realease
+  // if rank the top 2 video count on duration, match track duration and channel name that need to match track arits name
+
+  // add options to user so that they can correct youtube url
   const SearchYt = async () => {
     try {
         const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q="${GetArtists()} - ${track.name} Official Audio"&type=video&key=${aipKye}`
