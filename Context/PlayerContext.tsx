@@ -13,6 +13,7 @@ interface PlayerContextType {
     currentTrack: Track | null;
     play: (track?: Track) => void;
     pause: () => void;
+    addQueue: (track?: Track) => void;
 }
 
 export const PlayerContext = React.createContext<PlayerContextType>({
@@ -26,6 +27,7 @@ export const PlayerContext = React.createContext<PlayerContextType>({
     currentTrack: null,
     play: () => null,
     pause: () => null,
+    addQueue: () => null
 
 })
 
@@ -70,9 +72,19 @@ export const PlayerContextProvider: React.FC = (props: PropsWithChildren<{}>) =>
         //}
     }
 
+    const addQueue = async (track?: Track) => {
+        if(!track) {
+            return
+        }
+        await RNTrackPlayer.add([track])
+        setCurrentTrack(track)
+        await RNTrackPlayer.play()
+    } 
+
     const pause = async () => {
         await RNTrackPlayer.pause()
     }
+
 
     const value: PlayerContextType = {
         isPlaying: playerState === TrackPlayerState.Playing,
@@ -84,7 +96,8 @@ export const PlayerContextProvider: React.FC = (props: PropsWithChildren<{}>) =>
         ended: playerState === TrackPlayerState.Ended,
         currentTrack,
         play,
-        pause
+        pause,
+        addQueue,
     }
 
     return (

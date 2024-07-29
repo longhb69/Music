@@ -5,57 +5,21 @@ import axios from 'react-native-axios'
 import { BaseUrl } from '../shared'
 import { usePlayerContext } from '../Context/PlayerContext'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import { searchYoutube } from '../utils/searchYoutube'
+import { useYoutube } from '../Context/YoutubeContext'
 
 export default function Track({ track, currentSongId }) {
-  const aipKye = 'AIzaSyA_e8fP1BotG4eRszVpfUfN4arDM9gWlxI'
   const playerContext = usePlayerContext()
-
-  //should add year the track realease
-  // if rank the top 2 video count on duration, match track duration and channel name that need to match track arits name
-
-  // add options to user so that they can correct youtube url
-  const SearchYt = async () => {
-    try {
-        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q="${GetArtists()} - ${track.name} Official Audio"&type=video&key=${aipKye}`
-        const response = await fetch(url)
-        //console.log(url)
-        const data = await response.json()
-        console.log("\n")
-        // data.items.forEach(item => {
-        //     console.log(item.snippet.title)
-        //     console.log(`https://www.youtube.com/watch?v=${item.id.videoId}`)
-        // })
-        const duration = await GetVideoDuration(data.items[0].id.videoId)
-        const youtubeUrl = `https://www.youtube.com/watch?v=${data.items[0].id.videoId}`
-        return { youtubeUrl, duration }
-    } catch (error) {
-        console.log("Error fetching youtube data ", error)
-    }
+  const {searchYoutube} = useYoutube()
+  
+  const test = async () => {
+    searchYoutube(track)
+    //const {youtubeUrl, duration} = await searchYoutube(track)
+    //console.log("\n Final result")
+    //console.log(duration)
+    //console.log(youtubeUrl)
   }
 
-  const GetVideoDuration = async (videoId) => {
-    const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=contentDetails&id=${videoId}&key=${aipKye}`;
-    const videosResponse = await fetch(videosUrl);
-    const videosData = await videosResponse.json();
-    if (!videosData.items) {
-        console.log('No video details found');
-        return;
-    }
-    return isoDurationToMilliseconds(videosData.items[0].contentDetails.duration)
-}
-
-function  isoDurationToMilliseconds(isoDuration) {
-    const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
-    const matches = regex.exec(isoDuration);
-
-    const hours = matches[1] ? parseInt(matches[1]) : 0;
-    const minutes = matches[2] ? parseInt(matches[2]) : 0;
-    const seconds = matches[3] ? parseInt(matches[3]) : 0;
-
-    const totalMilliseconds = (hours * 3600 + minutes * 60 + seconds) * 1000;
-    return totalMilliseconds;
-}
-  
 const GetArtists = () => {
     let artists = ''
     track.artists.forEach(artist => {
@@ -125,7 +89,7 @@ const GetArtists = () => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={handlePlay}>
+    <TouchableWithoutFeedback onPress={test}>
         <View className="flex flex-row mx-4 mb-3.5">
             <View className="flex flex-row gap-3 items-center">
                 <View>

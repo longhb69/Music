@@ -18,7 +18,16 @@ export default function Content({ data }) {
 
   useEffect(() => {
     console.log("Queue End ", playerContext.ended)
+    if(playerContext.ended) {
+        const index = data.tracks.items.findIndex(item => item.track.id === playerContext.currentTrack.id)
+        if(index !== -1 && index < items.length - 1) {
+            playerContext.addQueue(data.tracks.items[index+1].track)
+        } else {
+            return null
+        }
+    }
   }, [playerContext.ended])
+
 
   return (
     <ScrollView>

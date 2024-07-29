@@ -31,6 +31,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Tabs from './navigation/Tabs';
 import { SpotifyAuthProvider } from './Context/SpotifyAuthContext';
 import { PlayerContextProvider } from './Context/PlayerContext';
+import { YoutubeProvider } from './Context/YoutubeContext';
 
 
 
@@ -63,15 +64,17 @@ function App() {
     <GestureHandlerRootView>
       <SpotifyAuthProvider>
         <PlayerContextProvider>
-          {isReady ? (
-            <NavigationContainer>
-              <SafeAreaView className='flex-1 bg-black'>
-                <Tabs/>
-              </SafeAreaView>
-            </NavigationContainer>
-          ): (
-          <Text>Player not yet load</Text>
-          )}
+          <YoutubeProvider>
+            {isReady ? (
+              <NavigationContainer>
+                <SafeAreaView className='flex-1 bg-black'>
+                  <Tabs/>
+                </SafeAreaView>
+              </NavigationContainer>
+            ): (
+            <Text>Player not yet load</Text>
+            )}
+          </YoutubeProvider>
         </PlayerContextProvider>
       </SpotifyAuthProvider>
     </GestureHandlerRootView>
