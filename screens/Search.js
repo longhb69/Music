@@ -9,7 +9,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 
 export default function Search({ navigation }) {
     const accessToken = useContext(SpotifyAuthContext)
-    const [query, setQuery] = useState('Twisters+official+playlist')
+    const [query, setQuery] = useState('Guy for that')
     const [text, setText] = useState('')
     const [results, setResults] = useState({})
     const [isFocused, setIsFocused] = useState(false)

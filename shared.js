@@ -1,1 +1,1 @@
-export const BaseUrl = 'https://msf0ksfl9ct0.share.zrok.io/'
+export const BaseUrl = 'https://xmd1mc0tspje.share.zrok.io/'

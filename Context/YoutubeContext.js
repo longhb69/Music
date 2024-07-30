@@ -6,13 +6,13 @@ const YoutubeContext = createContext()
 const primaryApiKey = 'AIzaSyA_e8fP1BotG4eRszVpfUfN4arDM9gWlxI';
 const backupApiKey = 'AIzaSyCyYIsDhA2IK2x-hs5bfIQd-v6tcbL2Vqo';
 const THRESHOLD = 0.6;
-const ALLOW_DIFFRENT = 2500; //2.5s
+const ALLOW_DIFFRENT = 4500; //4.5s
 
 export const YoutubeProvider = ({ children }) => {
     const key = useRef(primaryApiKey)
 
     const fetchYoutubeResults = async (query) => {
-        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${(query)}&type=video&maxResults=4&key=${key.current}`;
+        const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${(query)}&type=video&maxResults=5&key=${key.current}`;
         console.log(url)
         const response = await fetch(url);
         if (!response.ok) {
@@ -26,7 +26,9 @@ export const YoutubeProvider = ({ children }) => {
     const searchYoutube = async (track) => {
         try {
             let possibleMatch = []
-            const query = `${GetArtists(track.artists)} - ${track.name} Official Audio`;
+            //"Guy For That (Feat. Luke Combs) best to remove (Feat. someone)";
+            let newTrackName = track.name.replace(/\(Feat\. [^)]+\)/, "").trim();
+            const query = `${track.artists[0].name} - ${newTrackName} Official Audio`;
             let items = await fetchYoutubeResults(query);
 
             if (!items) {
@@ -36,7 +38,7 @@ export const YoutubeProvider = ({ children }) => {
             }
             console.log("\n")
             for(item of items) {
-                const result = await CheckVideoMatch(item.id.videoId, track.name, track.artists, track.duration_ms)
+                const result = await CheckVideoMatch(item.id.videoId, track)
                 if(result)
                    possibleMatch.push(result)
                 console.log("\n")
@@ -44,7 +46,7 @@ export const YoutubeProvider = ({ children }) => {
             console.log("result ", possibleMatch)
             //const duration = await GetVideoDuration(data.items[0].id.videoId, track.duration_ms)
             //const youtubeUrl = `https://www.youtube.com/watch?v=${data.items[0].id.videoId}`
-            //return { youtubeUrl, duration }
+            return possibleMatch[0] //frist match
         } catch (error) {
             console.log("Error fetching youtube data ", error)
         }
@@ -73,7 +75,7 @@ export const YoutubeProvider = ({ children }) => {
         return totalMilliseconds;
     }
 
-    const CheckVideoMatch = async (videoId, trackName, artists, trackDuration) => {
+    const CheckVideoMatch = async (videoId, track) => {
         const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${key.current}`;
         console.log(videosUrl)
         const videosResponse = await fetch(videosUrl);
@@ -85,38 +87,37 @@ export const YoutubeProvider = ({ children }) => {
         console.log("channel tilte: " ,channelTitle)
         console.log(youtubeUrl)
     
-        //if artist name is Various Artists i can skip this step
+        //if artist name is Various Artists i can skip check artist name this step
         let matchArtist = false
-        artists.forEach(artist => {
-            const similarity = stringSimilarity.compareTwoStrings(channelTitle.toLowerCase(), artist.name.toLowerCase())
-            if(similarity >= THRESHOLD) {
-                console.log("Channel match artis: " , artist.name)
-                matchArtist = true
-            }
-        })
+        if(track.album.artists[0].name === "Various Artists") {
+            matchArtist = true
+        } else {
+            track.artists.forEach(artist => {
+                console.log("Check artist", artist.name, " with video artist ", channelTitle)
+
+                const removeTopicTitle = channelTitle.replace("- Topic", "")
+                console.log("Remove topic word: ", removeTopicTitle)
+                const similarity = stringSimilarity.compareTwoStrings(removeTopicTitle.toLowerCase(), artist.name.toLowerCase())
+                if(similarity >= THRESHOLD) {
+                    console.log("Channel match artis: " , artist.name)
+                    matchArtist = true
+                }
+            })
+        }
         if(!matchArtist)
             return null
     
         console.log("Video title: ", videoTitle)
-        console.log("Track title: ", trackName)
-    
-        //const cleanedTitle = trackName.replace(/\(.*?\)/g, '').trim()
-        //console.log("Cleaned Track Title: ", cleanedTitle)
-        
-        //console.log(videoTitle.toLowerCase())
-        //console.log(cleanedTitle.toLowerCase())
-        //if(!videoTitle.toLowerCase().includes(cleanedTitle.toLowerCase() || !cleanedTitle.toLowerCase().includes(cleanedTitle.toLowerCase())))
-        //    return null
-    
+        console.log("Track title: ", track.name)
         
         const duration = isoDurationToMilliseconds(videosData.items[0].contentDetails.duration)
         console.log("Video duration: " , duration)
-        console.log("Track duration: ", trackDuration)
-        console.log("Duration diffent: ", duration-trackDuration)
+        console.log("Track duration: ", track.duration_ms)
+        console.log("Duration diffent: ", duration-track.duration_ms)
         //allow diffrent 2.5s
-        if(duration-trackDuration < ALLOW_DIFFRENT) {
+        if(duration-track.duration_ms < ALLOW_DIFFRENT) {
             console.log("Possible match: ", youtubeUrl)
-            return youtubeUrl
+            return {youtubeUrl, duration}
         }
         if (!videosData.items) {
             console.log('No video details found');
