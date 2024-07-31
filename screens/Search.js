@@ -6,10 +6,9 @@ import axios from "react-native-axios";
 import { TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
-
 export default function Search({ navigation }) {
     const accessToken = useContext(SpotifyAuthContext)
-    const [query, setQuery] = useState('Guy for that')
+    const [query, setQuery] = useState('Twisters')
     const [text, setText] = useState('')
     const [results, setResults] = useState({})
     const [isFocused, setIsFocused] = useState(false)
@@ -54,7 +53,6 @@ export default function Search({ navigation }) {
     }, [])
 
     const getData = async () => {
-        console.log("token for search ", accessToken)
         const encodedQuery = query.replace(/ /g, '+');
         const url = `https://api.spotify.com/v1/search?q=${encodedQuery}&type=album%2Ctrack%2Cplaylist&limit=10`
         try {
@@ -73,7 +71,6 @@ export default function Search({ navigation }) {
     const processInput = useCallback(
         debounce((inputText) => {
             if(inputText.trim() !== '') {
-                console.log("Query change", inputText)
                 setQuery(inputText)
             } else {
                 setResults({})
@@ -87,10 +84,8 @@ export default function Search({ navigation }) {
     };
 
     useEffect(() => {
-        console.log("Query change: ", query)
         getData()
     }, [query])
-
 
     return (
         <View className="bg-[#000]">

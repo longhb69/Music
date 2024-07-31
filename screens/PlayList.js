@@ -13,7 +13,6 @@ export default function PlayList({ route, navigation })  {
   useEffect(() => {
     const { id } = route.params
     const getPlaylistData = async () => {
-      console.log("Playlist id: ", id)
       const url = `https://api.spotify.com/v1/playlists/${id}`
       try {
         const response = await axios.get(url, {
@@ -36,7 +35,7 @@ export default function PlayList({ route, navigation })  {
       {data.id ?
         <>
           <Cover images={data.images}/>
-          <Content data={data}/>
+          <Content data={data} type="playlist"/>
         </>
       : null}
     </View>

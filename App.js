@@ -7,23 +7,13 @@
 
 import React, { useEffect, useState } from 'react';
 import {
-  Button,
   SafeAreaView,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   useColorScheme,
   View,
 } from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
 import TrackPlayer from 'react-native-track-player';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -33,8 +23,6 @@ import { SpotifyAuthProvider } from './Context/SpotifyAuthContext';
 import { PlayerContextProvider } from './Context/PlayerContext';
 import { YoutubeProvider } from './Context/YoutubeContext';
 
-
-
 function App() {
   const [isReady, setIsReady] = useState(false)
 
@@ -43,14 +31,6 @@ function App() {
       console.log('player is setup')
       setIsReady(true)
     })
-    // await TrackPlayer.add({
-    //   id: 'trackId',
-    //   url: require('./access/track.mp3'),
-    //   title: 'Track Title',
-    //   artist: 'Track Artist',
-    // })
-    // await TrackPlayer.play();
-    //await TrackPlayer.pause()
     return () => {
       TrackPlayer.destroy()
     }
@@ -71,8 +51,8 @@ function App() {
                   <Tabs/>
                 </SafeAreaView>
               </NavigationContainer>
-            ): (
-            <Text>Player not yet load</Text>
+            ) : (
+              <Text>Player not yet load</Text>
             )}
           </YoutubeProvider>
         </PlayerContextProvider>

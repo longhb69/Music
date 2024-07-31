@@ -1,5 +1,4 @@
 import { BottomTabBar, createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Library from "../screens/Library";
 import HomeStackNavigator from "./HomeStackNavigator.js";
 import SearchStackNavigator from "./SearchStackNavigator.js";
 import LibraryStackNavigation from "./LibraryStackNavigator.js";

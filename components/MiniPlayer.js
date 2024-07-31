@@ -5,13 +5,10 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import { usePlayerContext } from '../Context/PlayerContext'
 
 //Glassmorphism could be nice
-
 export default function MiniPlayer() {
-
   const playerContext = usePlayerContext()
 
   const handlePause = () => {
-    console.log("press pause")
     playerContext.pause()
   }
 

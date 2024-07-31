@@ -8,14 +8,13 @@ import { useYoutube } from '../Context/YoutubeContext'
 import { BaseUrl } from '../shared'
 import axios from 'react-native-axios'
 
-export default function Content({ data }) {
+export default function Content({ data, type }) {
   const playerContext = usePlayerContext()
   const {searchYoutube} = useYoutube()
   const [currentSongId, setCurrentSongId] = useState('')
 
   useEffect(() => {
     if(playerContext.currentTrack) {
-        console.log(playerContext.currentTrack.id)
         setCurrentSongId(playerContext.currentTrack.id)
     }
   }, [playerContext])
@@ -93,26 +92,64 @@ export default function Content({ data }) {
     }
   }
 
+  const GetArtists = (artists) => {
+    let Resultartists = ''
+    artists.forEach(artist => {
+        if (Resultartists.length > 0) {
+            Resultartists += ', ';
+        }
+        Resultartists += `${artist.name}`
+    })
+    return Resultartists
+}
 
-  return (
-    <ScrollView>
-        <View>
-            <Header owner={data.owner} name={data.name} description={data.description}/>
-        </View>
-        <View className="mt-4">
-            {
-                data.tracks.items.map((item, key) => {
+  const renderContent = () => {
+    if(type === "playlist") {
+        return <>
+            <View>
+                <Header owner={data.owner} name={data.name} description={data.description} type={type}/>
+            </View>
+            <View className="mt-4">
+                {data.tracks.items.map((item, key) => {
                     return (
                         <Track 
                             key={item.track.id} 
                             track={item.track} 
                             currentSongId={currentSongId} 
                             handlePlay={() => handlePlay(item.track)}
+                            type={type} 
                         />
-                    )
-                })
-            }
-        </View>
+                    );
+                })}
+            </View>
+        </>
+    } else if(type === "album") {
+        return <>
+            <View>
+                <Header owner={GetArtists(data.artists)} name={data.name} type={type}/> 
+            </View>
+            <View className="mt-4">
+                {data.tracks.items.map((item, key) => {
+                    return (
+                        <Track 
+                            key={item.id} 
+                            track={item} 
+                            currentSongId={currentSongId} 
+                            handlePlay={() => handlePlay(item)} 
+                            type={type} 
+                            images={data.images}
+                        />
+                    );
+                })}
+            </View>
+        </>
+    }
+    return <Text className="text-white">Emty</Text>
+  }
+
+  return (
+    <ScrollView>
+        {renderContent()}
     </ScrollView>
   )
 }

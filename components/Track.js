@@ -1,25 +1,17 @@
 import { View, Text, Image } from 'react-native'
 import React, { useEffect } from 'react'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
-import axios from 'react-native-axios'
-import { BaseUrl } from '../shared'
-import { usePlayerContext } from '../Context/PlayerContext'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { useYoutube } from '../Context/YoutubeContext'
 
-export default function Track({ track, currentSongId, handlePlay }) {
-  const playerContext = usePlayerContext()
+export default function Track({ track, currentSongId, handlePlay, type, images }) {
   const {searchYoutube} = useYoutube()
   
   const test = async () => {
      searchYoutube(track)
-    //const {youtubeUrl, duration} = await searchYoutube(track)
-    //console.log("\n Final result")
-    //console.log(duration)
-    //console.log(youtubeUrl)
   }
 
-const GetArtists = () => {
+  const GetArtists = () => {
     let artists = ''
     track.artists.forEach(artist => {
         if (artists.length > 0) {
@@ -28,8 +20,16 @@ const GetArtists = () => {
         artists += `${artist.name}`
     })
     return artists
-}
+  }
 
+  const getImage = () => {
+    if(type === "playlist") {
+        return track.album.images[track.album.images.length - 1].url
+    }
+    if(type === "album") {
+        return images[images.length - 1].url
+    }
+  }
 
   return (
     <TouchableWithoutFeedback onPress={() => handlePlay(track)}>
@@ -37,7 +37,7 @@ const GetArtists = () => {
             <View className="flex flex-row gap-3 items-center">
                 <View>
                     <Image 
-                        source={{ uri: track.album.images[track.album.images.length - 1].url}}
+                        source={{ uri: getImage()}}
                         className="h-[50px] w-[50px] "
                     />
                 </View>
