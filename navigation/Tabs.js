@@ -5,6 +5,9 @@ import LibraryStackNavigation from "./LibraryStackNavigator.js";
 import MiniPlayer from "../components/MiniPlayer.js";
 import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
+import { useState, useRef } from "react";
+import Animated, { useSharedValue } from "react-native-reanimated"
+import Player from "../components/Player.js";
 
 const Tab = createBottomTabNavigator();
 
@@ -12,26 +15,23 @@ const MINIMIZED_PLAYER_HEIGHT = 55;
 
 const styles = StyleSheet.create({
     playerSheet: {
-        overlayContainer: {
-            ...StyleSheet.absoluteFillObject,
-            backgroundColor: "cyan"
-        }
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "cyan",
+        height: 100
     }
 })
 
 const MyTabs = (props) => {
+    //const translationY = useSharedValue(0)
+    const [up, setUp] = useState(false)
     return (
         <>
-            <PanGestureHandler>
-                <View className="" style={[styles.playerSheet]}>
-                    <View
-                        pointerEvents="none"
-                        style={{
-                        
-                        ...StyleSheet.absoluteFillObject
-                        }}
-                    />
-                    <View style={{ height: MINIMIZED_PLAYER_HEIGHT }}>
+            <PanGestureHandler >
+                <View className="bg-black">
+                    <View style={{ 
+                        height: MINIMIZED_PLAYER_HEIGHT,
+                        opacity: 1,
+                    }}>
                         <MiniPlayer/>
                     </View>
                 </View>

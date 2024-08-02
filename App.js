@@ -22,10 +22,12 @@ import Tabs from './navigation/Tabs';
 import { SpotifyAuthProvider } from './Context/SpotifyAuthContext';
 import { PlayerContextProvider } from './Context/PlayerContext';
 import { YoutubeProvider } from './Context/YoutubeContext';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Player from './components/Player';
 
 function App() {
   const [isReady, setIsReady] = useState(false)
-
+  const Stack = createNativeStackNavigator()
   const start = async () => {
     await TrackPlayer.setupPlayer().then(() => {
       console.log('player is setup')
@@ -47,8 +49,25 @@ function App() {
           <YoutubeProvider>
             {isReady ? (
               <NavigationContainer>
-                <SafeAreaView className='flex-1 bg-black'>
-                  <Tabs/>
+                <SafeAreaView className="flex-1 bg-black">
+                  <Stack.Navigator>
+                    <Stack.Screen name="Tabs" component={Tabs} options={{headerShown: false}}/>
+                    <Stack.Screen name="Player" 
+                        options={{
+                            presentation: 'card',
+                            gestureEnabled: true,
+                            gestureDirection: 'vertical',
+                            animationDuration: 400,
+                            headerShown: false,
+                            cardStyle: {
+                              borderTopLeftRadius: 100,
+                              borderTopRightRadius: 100,
+                              overflow: 'hidden', // Ensure content doesn't overflow
+                          },
+                        }}
+                        component={Player}
+                    />
+                  </Stack.Navigator>
                 </SafeAreaView>
               </NavigationContainer>
             ) : (
