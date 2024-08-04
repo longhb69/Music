@@ -1,54 +1,60 @@
-import { View, Text, Image, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native'
 import React, { useEffect } from 'react'
 import { PanGestureHandler, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { usePlayerContext } from '../Context/PlayerContext'
 import { useNavigation } from '@react-navigation/native'
+import { MovingText } from './MovingText'
+import { useActiveTrack } from 'react-native-track-player'
+import { unkownTrackImageUri } from '../constants/images'
+import { PlayPauseButton, SkipToNextButton } from './PlayerControls'
 //Glassmorphism could be nice
 export default function MiniPlayer() {
   const playerContext = usePlayerContext()
   const navigation = useNavigation()
 
+  const activeTrack = useActiveTrack()
+  
+  const displayedTrack = activeTrack ?? null
+
+  //if(!displayedTrack) return null
+
   const handlePress = () => {
     navigation.navigate('Player')
   }
 
-  const handlePause = () => {
-    playerContext.pause()
-  }
-
-  useEffect(() => {
-    console.log("player context change", playerContext)
-  }, [playerContext.isPlaying])
-
-  const handlePlay = () => {
-    playerContext.play()
-  }
-
   return (
-    <View className="flex-row justify-between items-center h-full mx-2 pl-2 pr-4 rounded-lg bg-[#444444]">
-      <TouchableWithoutFeedback 
-        className="flex flex-row items-center gap-2 max-w-[70%]"
-        onPress={handlePress}
-      >
-        <Image source={{ uri: playerContext.currentTrack?.artwork}} className="h-[40px] w-[40px] rounded"/>
-        <Text numberOfLines={1} ellipsizeMode="tail" className=" text-white font-bold w-[90%]">{playerContext.currentTrack?.title}</Text>
-      </TouchableWithoutFeedback>
-      <View className="flex flex-row items-center gap-5">
-        {playerContext.isPlaying && (
-          <TouchableOpacity className="" onPress={handlePause}>
-            <AntDesign name="pause" size={30} color="white"/>
-          </TouchableOpacity>
-        )}
-
-        {(playerContext && !playerContext.isPlaying) && (
-          <TouchableOpacity onPress={handlePlay}>
-              <AntDesign name="caretright" size={24} color="white" />
-          </TouchableOpacity>
-        )}
-
-        <AntDesign name="forward" size={24} color="white"/>
-      </View>
+    <View className="flex-row p-2 items-center justify-between rounded-lg bg-[#444444]">
+        <View className="basis-[75%] overflow-hidden">
+          <TouchableWithoutFeedback className="felx flex-row" onPress={handlePress}>
+              <Image source={{ uri: displayedTrack?.artwork ?? unkownTrackImageUri}} className="h-[40px] w-[40px] rounded"/>
+              <View className="overflow-hidden ml-2 w-full flex justify-center">
+                  <MovingText 
+                      className="text-white font-bold" 
+                      text={displayedTrack?.title ?? 'Guy for that feat. Luke Combs aaaa'} 
+                      animationThreshold={30}
+                  />
+              </View>
+          </TouchableWithoutFeedback> 
+        </View> 
+        <View className="flex flex-row items-center mx-3 h-full basis-[20%]" style={styles.trackControlsContainer}>  
+            <PlayPauseButton iconSize={24}/> 
+            <SkipToNextButton iconSize={24}/>     
+        </View>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  trackControlsContainer: {
+    columnGap: 20,
+  },
+  trackTitleContainer: {
+    flex: 1,
+    overflow: 'hidden',
+    marginLeft: 10
+  },
+  contentContainer: {
+    flex: 1
+  }
+})

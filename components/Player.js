@@ -9,6 +9,7 @@ import { colors } from "../constants/tokens";
 import { MovingText } from "./MovingText";
 import PlayerProgressBar from "./PlayerProgressbar";
 import { usePlayerBackground } from "../Context/usePlayerBackground";
+import { PlayerControls } from "./PlayerControls";
 
 const width = Dimensions.get("window")
 
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
 })
 
 export default function Player() {
-    //const imageColors  = usePlayerBackground('https://i.scdn.co/image/ab67616d00001e0240f1c739f1afe06578b62515')
+    //usePlayerBackground('https://i.scdn.co/image/ab67616d00001e0240f1c739f1afe06578b62515')
     return (
         <SafeAreaView className="flex-1">
             <LinearGradient
@@ -67,12 +68,8 @@ export default function Player() {
                         </View>
                     </View>
                 </View>
-                <PlayerProgressBar /> 
-                <View className="flex flex-row my-10 justify-evenly items-center">
-                    <AntDesign name="banckward" size={35} color="white"/>
-                    <AntDesign name="caretright" size={48} color="white"/>
-                    <AntDesign name="forward" size={35} color="white"/>
-                </View>
+                <PlayerProgressBar/> 
+                <PlayerControls iconSize={40}/>
             </View>
         </SafeAreaView>
     )

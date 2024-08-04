@@ -17,19 +17,19 @@ export default function Content({ data, type }) {
     if(playerContext.currentTrack) {
         setCurrentSongId(playerContext.currentTrack.id)
     }
-  }, [playerContext])
+  }, [playerContext.currentTrack.id])
 
-  useEffect(() => {
-    console.log("Queue End ", playerContext.ended)
-    if(playerContext.ended) {
-        const index = data.tracks.items.findIndex(item => item.track.id === playerContext.currentTrack.id)
-        if(index !== -1 && index < data.tracks.items.length - 1) {
-            handlePlay(data.tracks.items[index+1].track)
-        } else {
-            return null
-        }
-    }
-  }, [playerContext.ended])
+//   useEffect(() => {
+//     console.log("Queue End ", playerContext.ended)
+//     if(playerContext.ended) {
+//         const index = data.tracks.items.findIndex(item => item.track.id === playerContext.currentTrack.id)
+//         if(index !== -1 && index < data.tracks.items.length - 1) {
+//             handlePlay(data.tracks.items[index+1].track)
+//         } else {
+//             return null
+//         }
+//     }
+//   }, [playerContext.ended])
 
   const handlePlay = async (track) => {
     const url = BaseUrl + `musics/${track.id}`

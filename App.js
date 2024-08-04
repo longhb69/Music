@@ -29,7 +29,9 @@ function App() {
   const [isReady, setIsReady] = useState(false)
   const Stack = createNativeStackNavigator()
   const start = async () => {
-    await TrackPlayer.setupPlayer().then(() => {
+    await TrackPlayer.setupPlayer({
+      maxCacheSize: 1024 * 10,
+    }).then(() => {
       console.log('player is setup')
       setIsReady(true)
     })

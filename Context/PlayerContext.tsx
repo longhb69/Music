@@ -64,11 +64,10 @@ export const PlayerContextProvider: React.FC = (props: PropsWithChildren<{}>) =>
         //    await RNTrackPlayer.seekTo(0)
         //    await RNTrackPlayer.play()
         //} else {
-            RNTrackPlayer.reset()
+            await RNTrackPlayer.reset()
             await RNTrackPlayer.add([track])
             setCurrentTrack(track)
             await RNTrackPlayer.play()
-            await seekTo(120.2)
         //}
     }
 

@@ -3,8 +3,8 @@ import Animated, { StyleSheet, useAnimatedStyle,Easing, useSharedValue, withDela
 
 export const MovingText = ({ text, animationThreshold, style }) => {
     const translateX = useSharedValue(0)
-    const shouldAnimate = text.length >= animationThreshold
-    const textWidth = text.length * 3
+    const shouldAnimate = text?.length >= animationThreshold
+    const textWidth = text?.length * 3
     const animatedStyle = useAnimatedStyle(() => {
         return {
             transform: [{ translateX: translateX.value}],

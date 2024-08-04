@@ -1,4 +1,7 @@
 {
   "name": "MusicApp",
-  "displayName": "MusicApp"
+  "displayName": "MusicApp",
+  "ios": {
+    "bundleIdentifier": "com.anonymous.musicapp"
+  }
 }
