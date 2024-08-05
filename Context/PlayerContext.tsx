@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useEffect } from 'react';
-import RNTrackPlayer, {State as TrackPlayerState ,Track, Event} from 'react-native-track-player'
+import RNTrackPlayer, {State as TrackPlayerState ,Track, Event, State} from 'react-native-track-player'
 import { seekTo } from 'react-native-track-player/lib/src/trackPlayer';
 
 interface PlayerContextType {
@@ -53,23 +53,15 @@ export const PlayerContextProvider: React.FC = (props: PropsWithChildren<{}>) =>
             RNTrackPlayer.play()
             return
         }
-        const queue = await RNTrackPlayer.getQueue();
-        //const existingTrack = queue.find(q => q.id === track.id)
-        //queue.forEach(item => {
-            //console.log("track current in queue", item)
-        //})
-        //if(existingTrack) {
-        //    console.log("Fonnd this track in queue replay it from begin")
-            //await RNTrackPlayer.skip(track.id)
-        //    await RNTrackPlayer.seekTo(0)
-        //    await RNTrackPlayer.play()
-        //} else {
-            await RNTrackPlayer.reset()
-            await RNTrackPlayer.add([track])
-            setCurrentTrack(track)
-            await RNTrackPlayer.play()
-        //}
+        await RNTrackPlayer.reset()
+        await RNTrackPlayer.add([track])
+        setCurrentTrack(track)
+        await RNTrackPlayer.play()
     }
+
+    useEffect(() => {
+        console.log("Buffering")
+    }, [TrackPlayerState.Error])
 
     const addQueue = async (track?: Track) => {
         if(!track) {

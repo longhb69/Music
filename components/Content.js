@@ -17,7 +17,7 @@ export default function Content({ data, type }) {
     if(playerContext.currentTrack) {
         setCurrentSongId(playerContext.currentTrack.id)
     }
-  }, [playerContext.currentTrack.id])
+  }, [playerContext.currentTrack?.id])
 
 //   useEffect(() => {
 //     console.log("Queue End ", playerContext.ended)
@@ -39,13 +39,13 @@ export default function Content({ data, type }) {
         const songData = response.data
         if(response.status === 200) {
             console.log("Play ", track.id, track.name)
-            console.log("Song that have duation of ", songData.durations_ms)
+            console.log("Song that have duation of ", songData.durations_ms/1000)
             playerContext.play({
                 id: track.id,
-                url: BaseUrl + `musics/streaming/${track.id}`,
+                url: BaseUrl + `musics/streaming/${track.id}`, //require('../access/Tear-Us-Apart.mp3')
                 title: track.name,
-                artist: 'Track Artist',
-                artwork: track.album.images[track.album.images.length - 1].url,
+                artist: GetArtists(track.artists),
+                artwork: track.album.images[0].url,
                 duration: songData.durations_ms/1000
             })
             
@@ -57,7 +57,7 @@ export default function Content({ data, type }) {
             console.log("Get song from youtube")
             console.log(duration)
             console.log(youtubeUrl)
-            AddSong(youtubeUrl, duration)
+            AddSong(youtubeUrl, duration, track)
 
         } else {
             console.log("Error fetching track ", error)
@@ -65,7 +65,7 @@ export default function Content({ data, type }) {
     }
   }
 
-  const AddSong = async (youtubeUrl, duration) => {
+  const AddSong = async (youtubeUrl, duration, track) => {
     const url = BaseUrl + `musics?ytUrl=${youtubeUrl}&albumId=test`
     const data = {
         id: track.id,
@@ -78,12 +78,13 @@ export default function Content({ data, type }) {
         const songData = response.data
         if(response.status === 201) {
             console.log("Add song complete with duration ", songData.durations_ms)
+            //Where the track?
             playerContext.play({
                 id: track.id,
                 url: BaseUrl + `musics/streaming/${track.id}`,
                 title: track.name,
                 artist: 'Track Artist',
-                artwork: track.album.images[track.album.images.length - 1].url,
+                artwork: track.album.images[0].url,
                 duration: songData.durations_ms/1000
             })
         }

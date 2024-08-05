@@ -10,6 +10,8 @@ import { MovingText } from "./MovingText";
 import PlayerProgressBar from "./PlayerProgressbar";
 import { usePlayerBackground } from "../Context/usePlayerBackground";
 import { PlayerControls } from "./PlayerControls";
+import { useActiveTrack } from "react-native-track-player";
+import { unkownTrackImageUri } from "../constants/images";
 
 const width = Dimensions.get("window")
 
@@ -33,6 +35,7 @@ const styles = StyleSheet.create({
 
 export default function Player() {
     //usePlayerBackground('https://i.scdn.co/image/ab67616d00001e0240f1c739f1afe06578b62515')
+    const activeTrack = useActiveTrack()
     return (
         <SafeAreaView className="flex-1">
             <LinearGradient
@@ -45,18 +48,22 @@ export default function Player() {
                 </View>
                 <View className="w-full h-[40%] my-10 rounded-md" style={styles.imageShadow}>
                     <Image 
-                        source={{ uri: "https://i.scdn.co/image/ab67616d00001e0240f1c739f1afe06578b62515"}}
+                        source={{ uri: activeTrack?.artwork ?? unkownTrackImageUri}}
                         className="w-full h-full"
                     />
                 </View>
                 <View className="flex flex-row items-center justify-between mt-5">
                     <View className="overflow-hidden basis-9/12 ">
                         <MovingText 
-                            text='Guy For That(Feat.Luke Combs)' 
+                            text={activeTrack?.title ?? ''}
                             className="text-white text-2xl" 
                             animationThreshold={26}
                         />
-                        <Text numberOfLines={1} className="text-white opacity-[0.8] text-lg">Post Malone</Text>
+                        {activeTrack?.artist && (
+                            <Text numberOfLines={1} className="text-white opacity-[0.8] text-lg">
+                                {activeTrack.artist}
+                            </Text>
+                        )}
                     </View>
                     <View className="flex flex-row gap-x-4 items-center basis-3/12">
                         <AntDesign 

@@ -19,8 +19,8 @@ export const PlayPauseButton = ({iconSize}) => {
 
     return (
         <View>
-            <TouchableOpacity activeOpacity={0.7}>
-                <AntDesign name={playing ? 'pause' : 'caretright'} size={iconSize} color={colors.text}/>
+            <TouchableOpacity activeOpacity={0.7} onPress={playing ? TrackPlayer.pause : TrackPlayer.play}>
+                <AntDesign name={playing ? 'pause' : 'caretright'} size={playing ? iconSize + 5 : iconSize} color={colors.text}/>
             </TouchableOpacity>
         </View>
     )
