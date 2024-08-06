@@ -52,17 +52,6 @@ export const YoutubeProvider = ({ children }) => {
         }
     }
 
-    const GetArtists = (artists) => {
-        let Resultartists = ''
-        artists.forEach(artist => {
-            if (Resultartists.length > 0) {
-                Resultartists += ', ';
-            }
-            Resultartists += `${artist.name}`
-        })
-        return Resultartists
-    }
-
     function  isoDurationToMilliseconds(isoDuration) {
         const regex = /PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/;
         const matches = regex.exec(isoDuration);

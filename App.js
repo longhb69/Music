@@ -30,8 +30,8 @@ function App() {
   const Stack = createNativeStackNavigator()
   const start = async () => {
     await TrackPlayer.setupPlayer({
-      minBuffer: 120, //minium second that needs to be buffered 
-      waitForBuffer: true
+      //minBuffer: 360, //minium second that needs to be buffered 
+      //waitForBuffer: true
     }).then(() => {
       console.log('player is setup')
       setIsReady(true)

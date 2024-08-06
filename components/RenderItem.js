@@ -5,21 +5,24 @@ import { TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture
 import {handlePlay} from '../utils/Streaming'
 import { usePlayerContext } from '../Context/PlayerContext'
 import { useYoutube } from '../Context/YoutubeContext'
+import { usePlayTrack } from '../hooks/usePlayTrack'
 
 
 export default function RenderItem({ item, navigation })  {
-    const playerContext = usePlayerContext()
-    const {searchYoutube} = useYoutube()
     const [currentSongId, setCurrentSongId] = useState('')
+    const {searchYoutube} = useYoutube()
+    const { play } = usePlayTrack()
 
-    useEffect(() => {
-        if(playerContext.currentTrack) {
-            setCurrentSongId(playerContext.currentTrack.id)
-        }
-      }, [playerContext])
+    const handlePlay = async (track) => {
+        play(track)
+    }
+
+    const test = async () => {
+        searchYoutube(item)
+     }
 
     const Track = () => {
-        return <TouchableWithoutFeedback onPress={() => handlePlay(item, playerContext, searchYoutube)}>
+        return <TouchableWithoutFeedback onPress={() => handlePlay(item)}>
             <View className="flex flex-row py-2 justify-between px-2">
                 <View className="flex flex-row gap-1.5 w-[90%]">
                     <View>
