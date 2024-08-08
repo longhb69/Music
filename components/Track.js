@@ -4,9 +4,11 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import { useYoutube } from '../Context/YoutubeContext'
 import { GetArtists } from '../utils/GetArtists'
+import { useActiveTrack } from 'react-native-track-player'
 
 export default function Track({ track, currentSongId, handlePlay, type, images }) {
   const {searchYoutube} = useYoutube()
+  const currentTrack = useActiveTrack()
   
   const test = async () => {
      searchYoutube(track)
@@ -32,7 +34,7 @@ export default function Track({ track, currentSongId, handlePlay, type, images }
                     />
                 </View>
                 <View className="justify-center w-full max-w-[70%]">
-                    <Text className={`font-medium ${currentSongId === track.id ? 'text-pink-600' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>{track.name}</Text>
+                    <Text className={`font-medium ${currentTrack?.id === track.id ? 'text-pink-600' : 'text-white'}`} numberOfLines={1} ellipsizeMode='tail'>{track.name}</Text>
                     <Text className="text-gray-400 text-sm " numberOfLines={1} ellipsizeMode='tail'>{GetArtists(track.artists)}</Text>
                 </View>
                 <AntDesign name='ellipsis1' size={20} color='white'/>

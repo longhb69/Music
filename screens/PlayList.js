@@ -1,14 +1,17 @@
 import { View, Text, Button } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { SpotifyAuthContext } from '../Context/SpotifyAuthContext'
 import axios from 'react-native-axios'
 import Content from '../components/Content'
 import Cover from '../components/Cover'
+import { useQueue } from '../store/queue'
 
 export default function PlayList({ route, navigation })  {
   const [loading, setLoading] = useState(true)
   const accessToken = useContext(SpotifyAuthContext)
   const [data, setData] = useState({})
+  const queueOffset = useRef(0)
+  const { activeQueueId, setActiveQueueId } = useQueue()
 
   useEffect(() => {
     const { id } = route.params

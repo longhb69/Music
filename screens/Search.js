@@ -88,7 +88,7 @@ export default function Search({ navigation }) {
     }, [query])
 
     return (
-        <View className="bg-[#000]">
+        <View className="bg-[#000]" style={{flex: 1}}>
             <Animated.View style={{transform: [{ translateY }] }}>
                 {isFocused ? null : <Text className="text-white text-xl mx-2">Search</Text> }
                 <View className="flex flex-row items-center">

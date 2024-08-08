@@ -10,11 +10,14 @@ import axios from 'react-native-axios'
 import TrackPlayer from 'react-native-track-player'
 import { usePlayTrack } from '../hooks/usePlayTrack'
 import { GetArtists } from '../utils/GetArtists'
+import { useQueue, useTracks } from '../store/queue'
 
 export default function Content({ data, type }) {
   const playerContext = usePlayerContext()
   const [currentSongId, setCurrentSongId] = useState('')
   const { play } = usePlayTrack()
+  const { addTrack, clearTracks } = useTracks()
+  const {setActiveQueueId} = useQueue()
 
   useEffect(() => {
     if(playerContext.currentTrack) {
@@ -22,8 +25,24 @@ export default function Content({ data, type }) {
     }
   }, [playerContext.currentTrack?.id])
 
+  useEffect(() => {
+    clearTracks()
+    data.tracks.items.forEach(element => {
+        //console.log(element.track.name, " - ", element.track.id)
+        const track = {
+            id: element.track.id,
+            url: BaseUrl + `musics/streaming/${element.track.id}`,
+            title: element.track.name,
+            artist: GetArtists(element.track.artists),
+            artwork: element.track.album.images[0].url,
+            duration: 0
+        }
+        addTrack(track)
+    });
+  }, [])
+
   const handlePlay = async (track) => {
-        play(track)
+        play(track, data.id) //data.id is playlist id or album id
   }
 
   const renderContent = () => {

@@ -34,7 +34,8 @@
     "react-native-track-player": "^4.1.1",
     "react-native-vector-icons": "^10.1.0",
     "react-navigation": "^5.0.0",
-    "string-similarity": "^4.0.4"
+    "string-similarity": "^4.0.4",
+    "zustand": "^4.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

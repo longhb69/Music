@@ -66,15 +66,15 @@ export const YoutubeProvider = ({ children }) => {
 
     const CheckVideoMatch = async (videoId, track) => {
         const videosUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&id=${videoId}&key=${key.current}`;
-        console.log(videosUrl)
+        //console.log(videosUrl)
         const videosResponse = await fetch(videosUrl);
         const videosData = await videosResponse.json();
         const channelTitle = videosData.items[0].snippet.channelTitle
         const videoTitle = videosData.items[0].snippet.title
         const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`
-        console.log("\nVideo detail")
-        console.log("channel tilte: " ,channelTitle)
-        console.log(youtubeUrl)
+        //console.log("\nVideo detail")
+        //console.log("channel tilte: " ,channelTitle)
+        //console.log(youtubeUrl)
     
         //if artist name is Various Artists i can skip check artist name this step
         let matchArtist = false
@@ -96,20 +96,20 @@ export const YoutubeProvider = ({ children }) => {
         if(!matchArtist)
             return null
     
-        console.log("Video title: ", videoTitle)
-        console.log("Track title: ", track.name)
+        //console.log("Video title: ", videoTitle)
+        //console.log("Track title: ", track.name)
         
         const duration = isoDurationToMilliseconds(videosData.items[0].contentDetails.duration)
-        console.log("Video duration: " , duration)
-        console.log("Track duration: ", track.duration_ms)
-        console.log("Duration diffent: ", duration-track.duration_ms)
+        //console.log("Video duration: " , duration)
+        //console.log("Track duration: ", track.duration_ms)
+        //console.log("Duration diffent: ", duration-track.duration_ms)
         //allow diffrent 2.5s
         if(duration-track.duration_ms < ALLOW_DIFFRENT) {
-            console.log("Possible match: ", youtubeUrl)
+            //console.log("Possible match: ", youtubeUrl)
             return {youtubeUrl, duration}
         }
         if (!videosData.items) {
-            console.log('No video details found');
+            //console.log('No video details found');
             return;
         }
     }
