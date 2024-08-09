@@ -23,6 +23,7 @@
     "react-native-axios": "^0.17.1",
     "react-native-color-grabber": "^0.0.3",
     "react-native-color-lens": "^2.2.4",
+    "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.17.1",
     "react-native-image-color-picker": "^1.0.4",
     "react-native-image-colors": "^2.4.0",
