@@ -1,9 +1,22 @@
-import RNFS from 'react-native-fs'
+import RNFS, { exists } from 'react-native-fs'
+
+const MAX_CACHE_FILES = 10
 
 export const useCache = () => {
-    const dowloadAudioFile = async (url, filename) => {
+    const dowloadAudioFile = async (url, trackId) => {
         try {
-            const path = `${RNFS.CachesDirectoryPath}/${filename}.mp3`;
+            const path = `${RNFS.CachesDirectoryPath}/${trackId}.mp3`;
+            const cacheDir = RNFS.CachesDirectoryPath;
+            const files = await RNFS.readDir(cacheDir)
+            if(files.length >= MAX_CACHE_FILES) {
+                files.sort((a,b) => a.mtime - b.mtime)
+                const oldestFile = files[0]
+                await RNFS.unlink(oldestFile.path)
+                console.log(`Deleted oldest cache file: ${oldestFile.name}`)
+            }
+            for(const file of files) {
+                console.log(file)
+            }
             const fileExists = await RNFS.exists(path)
             if(fileExists) {
                 console.log('File is already cached', path)
@@ -33,5 +46,26 @@ export const useCache = () => {
         }
     }
 
-    return { dowloadAudioFile }
+    const FindCached = async (id) => {
+        const path = `${RNFS.CachesDirectoryPath}/${id}.mp3`;
+        const fileExists = await RNFS.exists(path)
+        return fileExists ? { existsInCache:fileExists, path:path } : { existsInCache:fileExists, path:null }
+    }
+
+    const deleteCache = async () => {
+        try {
+            const cacheDir = RNFS.CachesDirectoryPath;
+            const files = await RNFS.readDir(cacheDir);
+
+            for(const file of files) {
+                if(file.isFile() && file.name.endsWith('.mp3')) {
+                    await RNFS.unlink(file.path);
+                }
+            }
+        } catch(error) {
+            console.log('Error deleting cache files:', error)
+        }
+    }
+    
+    return { dowloadAudioFile, FindCached,  deleteCache }
 }

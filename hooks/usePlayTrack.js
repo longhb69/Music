@@ -8,19 +8,26 @@ import { useQueue, useTracks } from "../store/queue"
 import { assertEasingIsWorklet } from "react-native-reanimated/lib/typescript/animation/util"
 import { getQueue } from "react-native-track-player/lib/src/trackPlayer"
 import { useCache } from "./useCache"
-
+//require('../access/Tear-Us-Apart.mp3')
 export const usePlayTrack = () => {
     const {searchYoutube} = useYoutube()
     const queueOffset = useRef(0)
     const { activeQueueId, setActiveQueueId } = useQueue()
     const {tracks, updateTrackDuration} = useTracks()
-    const { dowloadAudioFile } = useCache()
+    const { dowloadAudioFile, FindCached } = useCache()
 
     const PlayTrack = async (track, songData, id) => {
         console.log("Play ", track.name, track.id)
         const trackIndex = tracks.findIndex((item) => item.id === track.id)
         const isChangingQueue = id !== activeQueueId
-        if(id) {
+        const { existsInCache, path } = await FindCached(track.id)
+        if(!existsInCache) {
+            console.log("track ", track.name, " not in cache begin cache ")
+            dowloadAudioFile(BaseUrl + `musics/streaming/${track.id}`, `${track.id}`)
+        } else {
+            console.log("track ", track.name, "found in cache")
+        }
+        if(id) {  //handle if user play from playlist or album
             if(isChangingQueue) {
                 console.log("new queue")
                 //add cache audio in background when complete cache update track.url in queue, 
@@ -29,7 +36,7 @@ export const usePlayTrack = () => {
                 //const cacheAudio = await dowloadAudioFile(BaseUrl + `musics/streaming/${track.id}`, `${track.id}`)
                 const track_to_play = {
                     id: track.id,
-                    url: BaseUrl + `musics/streaming/${track.id}`,//`file://${cacheAudio}`, //require('../access/Tear-Us-Apart.mp3'),
+                    url: existsInCache ? `file://${path}` : BaseUrl + `musics/streaming/${track.id}`,
                     title: track.name,
                     artist: GetArtists(track.artists),
                     artwork: track.album.images[0].url,
@@ -49,12 +56,32 @@ export const usePlayTrack = () => {
                 const nextTrackIndex = trackIndex - queueOffset.current < 0 
                     ? tracks.length + trackIndex - queueOffset.current
                     : trackIndex - queueOffset.current
-                
+
                 const queue = await getQueue()
-                console.log(queue[nextTrackIndex])
+                if(existsInCache) {
+                    await updateTrackPathInQueue(track.id, path)
+                    console.log(queue[nextTrackIndex])
+                } 
                 await TrackPlayer.skip(nextTrackIndex)
                 await TrackPlayer.play()
             }
+        } else { //if use play single track like from search result
+
+        }
+    }
+
+    const updateTrackPathInQueue = async (updateTrackId, path) => {
+        const queue = await getQueue()
+        const trackIndex = queue.findIndex(track => track.id === updateTrackId)
+        if(trackIndex !== -1) {
+            const originalTrack = queue[trackIndex];
+            const updateTrack = {
+                ...originalTrack,
+                url: `file://${path}`,
+            }
+            await TrackPlayer.remove(trackIndex)
+            await TrackPlayer.add(updateTrack, trackIndex)
+        } else {
         }
     }
 
@@ -64,11 +91,7 @@ export const usePlayTrack = () => {
             const result = await findSong(track.id)
             if(result.status === 200) {
                 const track_update_duration = {
-                    id: track.id,
-                    url: track.url,
-                    title: track.title,
-                    artist: track.artist,
-                    artwork: track.artwork,
+                    ...track,
                     duration: result.songData.durations_ms/1000
                 }
                 console.log("Add song ", track_update_duration.title, " with duration ", track_update_duration.duration, " to queue")
@@ -77,7 +100,7 @@ export const usePlayTrack = () => {
                 console.log("Song not found to add queue", track.title)
                 await TrackPlayer.add(track)
                 console.log("begin dowload song: ---- ", track.title)
-                //add track to server
+                //send single to server to begin dowload song
             }
         }
     }
