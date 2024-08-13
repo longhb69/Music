@@ -78,7 +78,7 @@ export const YoutubeProvider = ({ children }) => {
     
         //if artist name is Various Artists i can skip check artist name this step
         let matchArtist = false
-        if(track.album.artists[0].name === "Various Artists") {
+        if(track.album?.artists[0].name === "Various Artists") {
             matchArtist = true
         } else {
             track.artists.forEach(artist => {

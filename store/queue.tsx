@@ -5,13 +5,36 @@ type QueueStore = {
     setActiveQueueId: (id: string) => void
 }
 
+type ExternalUrls = {
+    spotify: string,
+} 
+
+type Artist = {
+    external_urls: ExternalUrls
+    href: string,
+    id: string,
+    name: string,
+    type: string,
+    uri: string,
+}
+
+type Album = {
+    id: string,
+    name: string,
+    artists: Artist[]
+}
+
 type Track = {
     id: string,
     url: string;
     title: string;
+    name: string;
     artist: string;
     artwork: string;
     duration: number;
+    duration_ms: number;
+    artists: Artist[]
+    album: Album[];
 }
 
 type TrackStore = {

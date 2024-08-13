@@ -29,20 +29,39 @@ export default function Content({ data, type }) {
     clearTracks()
     data.tracks.items.forEach(element => {
         //console.log(element.track.name, " - ", element.track.id)
+        let album
+        if(type === 'album') {
+            album = {
+                id: element.id,
+                name: element.name,
+                artists: element.artists
+            }
+        } 
+        else if(type === 'playlist') {
+            album = {
+                id: element.track.id,
+                name: element.track.name,
+                artists: element.track.artists
+            }
+        }
         const track = {
             id: element.track.id,
             url: BaseUrl + `musics/streaming/${element.track.id}`,
             title: element.track.name,
             artist: GetArtists(element.track.artists),
             artwork: element.track.album.images[0].url,
-            duration: 0
+            duration: 0,
+            duration_ms: element.track.duration_ms,
+            artists: element.track.album.artists,
+            album: album
         }
+        console.log("album", track.title)
         addTrack(track)
     });
   }, [])
 
-  const handlePlay = async (track) => {
-        play(track, data.id) //data.id is playlist id or album id
+  const handlePlay = async ({ track, index }) => {
+        play({ track:track, id:data.id}) //data.id is playlist id or album id
   }
 
   const renderContent = () => {
@@ -58,7 +77,7 @@ export default function Content({ data, type }) {
                             key={item.track.id} 
                             track={item.track} 
                             currentSongId={currentSongId} 
-                            handlePlay={() => handlePlay(item.track)}
+                            handlePlay={() => handlePlay({ track: item.track, index: key})}
                             type={type} 
                         />
                     );

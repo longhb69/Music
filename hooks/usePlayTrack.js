@@ -5,7 +5,6 @@ import { useYoutube } from "../Context/YoutubeContext"
 import TrackPlayer from "react-native-track-player"
 import { GetArtists } from "../utils/GetArtists"
 import { useQueue, useTracks } from "../store/queue"
-import { assertEasingIsWorklet } from "react-native-reanimated/lib/typescript/animation/util"
 import { getQueue } from "react-native-track-player/lib/src/trackPlayer"
 import { useCache } from "./useCache"
 //require('../access/Tear-Us-Apart.mp3')
@@ -100,7 +99,7 @@ export const usePlayTrack = () => {
                 console.log("Song not found to add queue", track.title)
                 await TrackPlayer.add(track)
                 console.log("begin dowload song: ---- ", track.title)
-                //send single to server to begin dowload song
+                //const {duration, youtubeUrl } = await searchYoutube(track)
             }
         }
     }
@@ -127,7 +126,7 @@ export const usePlayTrack = () => {
         }
     }
 
-    const play = useCallback(async (track, id = null) => { //id is playlist id or album id
+    const play = useCallback(async ({ track, id = null }) => { //id is playlist id or album id
             const result = await findSong(track.id);
             if (result.status === 200) {
                 console.log('Track found:', track.name);
@@ -141,8 +140,8 @@ export const usePlayTrack = () => {
                 await AddSongAndPlay(youtubeUrl, duration, track, id);
             }
     })
-    
-    const AddSongAndPlay = async (youtubeUrl, duration, track, id) => {
+
+    const AddSong = async (youtubeUrl, duration, track)  => {
         const url = BaseUrl + `musics?ytUrl=${youtubeUrl}&albumId=test`
         const data = {
             id: track.id,
@@ -154,11 +153,17 @@ export const usePlayTrack = () => {
             const response = await axios.post(url, data)
             const songData = response.data
             if(response.status === 201) {
-                PlayTrack(track, songData, id)
+                return { status: response.status, songData: songData}
             }
         } catch(error) {
             console.log('Error add song', error.message);
         }
+    }
+    
+    const AddSongAndPlay = async (youtubeUrl, duration, track, id) => {
+        const {status, songData} = await AddSong(youtubeUrl, duration, track)
+        if(status === 201)   
+            PlayTrack(track, songData, id)
     }
 
     return { play }
